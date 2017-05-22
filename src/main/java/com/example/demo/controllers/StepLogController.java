@@ -2,7 +2,10 @@ package com.example.demo.controllers;
 
 import com.example.demo.entities.StepLog;
 import com.example.demo.services.StepLogService;
+import com.sun.deploy.net.HttpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +23,7 @@ public class StepLogController {
 
     private StepLogService stepLogService;
 
+
     @Autowired
     public void setStepLogService(StepLogService stepLogService) {
         this.stepLogService = stepLogService;
@@ -29,6 +33,11 @@ public class StepLogController {
     public StepLog saveStepLog(@Valid StepLog stepLog, BindingResult bindingResult, Model model) {
         stepLogService.saveStepLog(stepLog);
         return stepLog;
+    }
+
+    @RequestMapping(value = "/stepLogs", method = RequestMethod.GET)
+    public ResponseEntity<Iterable<StepLog>> getLogs() {
+        return new ResponseEntity(stepLogService.listAllStepLogs(), HttpStatus.NOT_FOUND);
     }
 
 }
