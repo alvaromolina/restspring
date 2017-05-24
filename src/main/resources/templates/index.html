@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Registration Form</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"></link>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+<script>
+
+    function updateSteps(){
+        $.getJSON( "/getSteps", function( data ) {
+            $('#pasos').html(data.steps);
+            if(data.steps > 100){
+                $('#pasos').removeClass("label-warning")
+                $('#pasos').addClass("label-danger");
+            }else{
+                $('#pasos').removeClass("label-danger")
+                $('#pasos').addClass("label-warning");
+            }
+            //document.getElementById('pasos').innerHTML = data.steps;
+        });
+    }
+
+    setInterval(function(){
+        updateSteps();
+        //location.reload();
+    }, 5000);
+</script>
+
+<p>Pasos</p>
+<span id="pasos" class="label" th:text="${countSteps}">countSteps</span>
+<br></br>
+<br></br>
+<br></br>
+<br></br>
+<br></br>
+<textarea name="" id="" cols="30" rows="10"></textarea>
+</body>
+</html>
