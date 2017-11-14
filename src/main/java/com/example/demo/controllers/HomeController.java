@@ -31,7 +31,14 @@ public class HomeController {
         while(iterator.hasNext()){
             steps += iterator.next().getSteps();
         };
+        System.out.println(steps);
         model.addAttribute("countSteps",steps);
         return "index";
+    }
+
+    @RequestMapping(value = "/map", method = RequestMethod.GET)
+    public String map(Model model) {
+        //Direccion direccion = DireccionService.getDireccionById(22);
+        return "map";
     }
 }
