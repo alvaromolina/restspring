@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
+    <script src="https://maps.googleapis.com/maps/api/js?sensor=false">
+    </script>
     <style>
        #map {
         height: 400px;
@@ -9,23 +10,62 @@
        }
     </style>
 </head>
+
 <body>
+
 <h3>My Google Maps Demo</h3>
+<button id="routebtn">CalcularRuta</button>
 <div id="map"></div>
-<script>
-      function initMap() {
-        var uluru = {lat: -25.363, lng: 131.044};
-        var map = new google.maps.Map(document.getElementById('map'), {
-          zoom: 4,
-          center: uluru
+
+<script th:inline="javascript">
+
+
+  function mapLocation() {
+    var directionsDisplay;
+    var directionsService = new google.maps.DirectionsService();
+    var map;
+
+    function initialize() {
+        directionsDisplay = new google.maps.DirectionsRenderer();
+        var chicago = new google.maps.LatLng([[${order.latitude}]], [[${order.longitude}]]);
+        var mapOptions = {
+            zoom: 7,
+            center: chicago
+        };
+        map = new google.maps.Map(document.getElementById('map'), mapOptions);
+        directionsDisplay.setMap(map);
+        google.maps.event.addDomListener(document.getElementById('routebtn'), 'click', calcRoute);
+    }
+
+    function calcRoute() {
+        var start = new google.maps.LatLng([[${order.latitude}]], [[${order.longitude}]]);
+        //var end = new google.maps.LatLng(38.334818, -181.884886);
+        var end = new google.maps.LatLng([[${order.latitudeDest}]], [[${order.longitudeDest}]]);
+
+        var bounds = new google.maps.LatLngBounds();
+        bounds.extend(start);
+        bounds.extend(end);
+        map.fitBounds(bounds);
+        var request = {
+            origin: start,
+            destination: end,
+            travelMode: google.maps.TravelMode.DRIVING
+        };
+        directionsService.route(request, function (response, status) {
+            if (status == google.maps.DirectionsStatus.OK) {
+                directionsDisplay.setDirections(response);
+                directionsDisplay.setMap(map);
+            } else {
+                alert("Directions Request from " + start.toUrlValue(6) + " to " + end.toUrlValue(6) + " failed: " + status);
+            }
         });
-        var marker = new google.maps.Marker({
-          position: uluru,
-          map: map
-        });
-      }
+    }
+
+    google.maps.event.addDomListener(window, 'load', initialize);
+}
+mapLocation();
     </script>
-<script src="https://maps.googleapis.com/maps/api/js?callback=initMap">
-</script>
+<img th:src="@{/prueba.png}" ></img>
+
 </body>
 </html>

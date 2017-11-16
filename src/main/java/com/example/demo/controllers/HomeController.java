@@ -1,7 +1,10 @@
 package com.example.demo.controllers;
 
+import com.example.demo.entities.Order;
 import com.example.demo.entities.StepLog;
 import com.example.demo.services.StepLogService;
+import com.example.demo.services.OrderService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,9 +20,16 @@ import java.util.Iterator;
 public class HomeController {
 
     private StepLogService stepLogService;
+    private OrderService orderService;
+
     @Autowired
     public void setStepLogService(StepLogService stepLogService) {
         this.stepLogService = stepLogService;
+    }
+
+    @Autowired
+    public void setOrderService(OrderService orderService) {
+        this.orderService = orderService;
     }
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
@@ -38,7 +48,8 @@ public class HomeController {
 
     @RequestMapping(value = "/map", method = RequestMethod.GET)
     public String map(Model model) {
-        //Direccion direccion = DireccionService.getDireccionById(22);
+        Order order  = orderService.getOrderById(1L);
+        model.addAttribute("order",order);
         return "map";
     }
 }
